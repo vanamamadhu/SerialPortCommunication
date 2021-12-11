@@ -50,10 +50,6 @@ namespace SerialPortCommunication
                 _serialPort.DataBits = Convert.ToInt32(cBoxDataBits.Text);
                 _serialPort.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
 
-                // Set the read/write timeouts
-                //_serialPort.ReadTimeout = 500;
-                //_serialPort.WriteTimeout = 500;
-
                 _serialPort.Open();
                 progressBar1.Value = 100;
                 
