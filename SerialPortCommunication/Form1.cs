@@ -10,7 +10,6 @@ namespace SerialPortCommunication
         string dataOut = "";
         string sendWith = "Write";
         string dataIN = "";
-        StreamWriter _streamWriter;
         string basePath = AppDomain.CurrentDomain.BaseDirectory.Split("bin")[0];
         public Form1()
         {
@@ -21,6 +20,8 @@ namespace SerialPortCommunication
         {
             string[] ports = SerialPort.GetPortNames();
             cBoxCOMPort.Items.AddRange(ports);
+
+            string actualPath = basePath + "DataFile\\ReceiverORSenderData.txt";
 
             btnOpen.Enabled = true;
             btnClose.Enabled = false;
@@ -88,6 +89,21 @@ namespace SerialPortCommunication
                     _serialPort.Write(dataOut);
                 }
             }
+            try
+            {
+                using (StreamWriter _streamWriter = File.AppendText(actualPath))
+                {
+                    _streamWriter.WriteLine("-----------Data going out said Begin-------------------");
+                    _streamWriter.WriteLine(dataOut.ToString());
+                    _streamWriter.WriteLine("-----------Data going out said End-------------------");
+                    _streamWriter.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                _streamWriter.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
         private void btnClearDataOut_Click(object sender, EventArgs e)
         {
@@ -141,18 +157,17 @@ namespace SerialPortCommunication
             lblDataINLength.Text = (tBoxReceiverControl.TextLength).ToString();
 
             try {
-                string actualPath = basePath + "DataFile\\ReceiverORSenderData.txt";
-                _streamWriter = new StreamWriter(actualPath);
-                _streamWriter.WriteLine("-----------Data comining from out said Begin-------------------");
-                _streamWriter.WriteLine(dataIN.ToString());
-                _streamWriter.WriteLine("-----------Data comining from out said End-------------------");
-                _streamWriter.Close();
+                using (StreamWriter _streamWriter = File.AppendText(actualPath)) {
+                    _streamWriter.WriteLine("-----------Data comining from out said Begin-------------------");
+                    _streamWriter.WriteLine(dataIN.ToString());
+                    _streamWriter.WriteLine("-----------Data comining from out said End-------------------");
+                    _streamWriter.Close();
+                }
             }
             catch (Exception ex) {
                 _streamWriter.Close();
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void chBoxAllwaysUpdate_CheckedChanged(object sender, EventArgs e)
