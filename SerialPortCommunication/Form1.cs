@@ -10,14 +10,11 @@ namespace SerialPortCommunication
         string dataOut = "";
         string sendWith = "Write";
         string dataIN = "";
+        StreamWriter _streamWriter;
+        string basePath = AppDomain.CurrentDomain.BaseDirectory.Split("bin")[0];
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -90,7 +87,6 @@ namespace SerialPortCommunication
                 else {
                     _serialPort.Write(dataOut);
                 }
-                
             }
         }
         private void btnClearDataOut_Click(object sender, EventArgs e)
@@ -143,6 +139,19 @@ namespace SerialPortCommunication
                 tBoxReceiverControl.Text += dataIN.ToString();
             }
             lblDataINLength.Text = (tBoxReceiverControl.TextLength).ToString();
+
+            try {
+                string actualPath = basePath + "DataFile\\ReceiverORSenderData.txt";
+                _streamWriter = new StreamWriter(actualPath);
+                _streamWriter.WriteLine("-----------Data comining from out said Begin-------------------");
+                _streamWriter.WriteLine(dataIN.ToString());
+                _streamWriter.WriteLine("-----------Data comining from out said End-------------------");
+                _streamWriter.Close();
+            }
+            catch (Exception ex) {
+                _streamWriter.Close();
+                MessageBox.Show(ex.Message);
+            }
 
         }
 
